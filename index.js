@@ -93,36 +93,29 @@ CellularAutomata.prototype.get = function () {
 };
 
 CellularAutomata.prototype.getNeighbours = function () {
-    var self = this,
-        neighbourArguments = arguments,
-        stride = this.currentArray.stride,
+    var stride = this.currentArray.stride,
         neighbourValues = new Array(this.neighbours.length),
+        dimensionNumber = this.currentArray.dimension,
         currentArgumentValue,
-        outOfBound,
-        index,
-        i, k;
+        isOutOfBound,
+        internalArrayIndex,
+        neighbourIndex, dimension;
 
-    for (i = 0; i < this.neighbours.length; i++) {
-        currentArgumentValue = null;
-        outOfBound = false;
-        index = 0;
+    for (neighbourIndex = 0; neighbourIndex < this.neighbours.length; neighbourIndex++) {
+        isOutOfBound = false;
+        internalArrayIndex = 0;
 
-        for (k = 0; k < neighbourArguments.length; k++) {
-            currentArgumentValue = neighbourArguments[k] + this.neighbours[i][k];
+        for (dimension = 0; dimension < dimensionNumber; dimension++) {
+            currentArgumentValue = arguments[dimension] + this.neighbours[neighbourIndex][dimension];
 
-            if (currentArgumentValue < 0 || currentArgumentValue >= this.shape[k]) {
-                outOfBound = true;
+            if (currentArgumentValue < 0 || currentArgumentValue >= this.shape[dimension]) {
+                isOutOfBound = true;
             } else {
-                index += currentArgumentValue * stride[k];
+                internalArrayIndex += currentArgumentValue * stride[dimension];
             }
         }
 
-        if (outOfBound) {
-            neighbourValues[i] = this.outOfBoundValue;
-        } else {
-            neighbourValues[i] = this.currentArray.data[index];
-        }
-
+        neighbourValues[neighbourIndex] = isOutOfBound ? this.outOfBoundValue : this.currentArray.data[internalArrayIndex];
     }
 
     return neighbourValues;
