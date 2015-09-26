@@ -95,17 +95,21 @@ CellularAutomata.prototype.get = function () {
 CellularAutomata.prototype.getNeighbours = function () {
     var self = this,
         neighbourArguments = arguments,
-        getArguments = new Array(arguments.length);
+        getArguments = new Array(arguments.length),
+        neighbourValues = [],
+        i, k;
 
     //TODO bypassing get may increase the performance, due to the arguments thing going on
 
-    return this.neighbours.map(function (relativeNeighbor) {
-        for (var i = 0; i < neighbourArguments.length; i++) {
-            getArguments[i] = neighbourArguments[i] + relativeNeighbor[i];
+    for (i = 0; i < this.neighbours.length; i++) {
+        for (k = 0; k < neighbourArguments.length; k++) {
+            getArguments[k] = neighbourArguments[k] + this.neighbours[i][k];
         }
 
-        return self.get.apply(self, getArguments);
-    });
+        neighbourValues.push(this.get.apply(this, getArguments));
+    }
+
+    return neighbourValues;
 };
 
 CellularAutomata.prototype.switchArrays = function () {
@@ -117,8 +121,10 @@ CellularAutomata.prototype.switchArrays = function () {
 CellularAutomata.prototype.singleIteration = function () {
     //TODO do not hardcode it as 2D
 
-    for (var x = 0; x < this.shape[0]; x++) {
-        for (var y = 0; y < this.shape[1]; y++) {
+    var x, y;
+
+    for (x = 0; x < this.shape[0]; x++) {
+        for (y = 0; y < this.shape[1]; y++) {
             this.workingArray.set(x, y, this.rule.process(this.get(x, y), this.getNeighbours(x, y)));
         }
     }
@@ -127,7 +133,9 @@ CellularAutomata.prototype.singleIteration = function () {
 };
 
 CellularAutomata.prototype.iterate = function (iterationNumber) {
-    for (var i = 0; i < iterationNumber; i++) {
+    var i;
+
+    for (i = 0; i < iterationNumber; i++) {
         this.singleIteration();
     }
 };
