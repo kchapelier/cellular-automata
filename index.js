@@ -40,12 +40,12 @@ CellularAutomata.prototype.currentArray = null;
 CellularAutomata.prototype.workingArray = null;
 
 CellularAutomata.prototype.rule = null;
-CellularAutomata.prototype.neighbourMethod = null;
-CellularAutomata.prototype.neighbourRange = null;
-CellularAutomata.prototype.neighbours = null;
+CellularAutomata.prototype.neighbourhoodType = null;
+CellularAutomata.prototype.neighbourhoodRange = null;
+CellularAutomata.prototype.neighbourhood = null;
 
 CellularAutomata.prototype.calculateNeighbours = function () {
-    this.neighbours = distanceFunctions[this.neighbourMethod](this.neighbourRange, this.shape.length);
+    this.neighbourhood = distanceFunctions[this.neighbourhoodType](this.neighbourhoodRange, this.shape.length);
 };
 
 CellularAutomata.prototype.setOutOfBoundValue = function (outOfBoundValue) {
@@ -62,16 +62,16 @@ CellularAutomata.prototype.setRule = function (rule, neighbourhoodType, neighbou
             throw new Error('The rulestring could not be parsed.');
         }
 
-        this.neighbourMethod = this.rule.neighbourhoodType;
-        this.neighbourRange = this.rule.neighbourhoodRange;
+        this.neighbourhoodType = this.rule.neighbourhoodType;
+        this.neighbourhoodRange = this.rule.neighbourhoodRange;
     } else if(ruleType === 'function') {
         this.rule = {
             ruleType: 'custom',
             process: rule
         };
 
-        this.neighbourMethod = neighbourhoodType === 'von-neumann' ? 'von-neumann' : 'moore';
-        this.neighbourRange = neighbourhoodRange || 1;
+        this.neighbourhoodType = neighbourhoodType === 'von-neumann' ? 'von-neumann' : 'moore';
+        this.neighbourhoodRange = neighbourhoodRange || 1;
     } else {
         throw new Error('Invalid rule, neither a string nor a function.');
     }
@@ -94,19 +94,19 @@ CellularAutomata.prototype.get = function () {
 
 CellularAutomata.prototype.getNeighbours = function () {
     var stride = this.currentArray.stride,
-        neighbourValues = new Array(this.neighbours.length),
+        neighbourValues = new Array(this.neighbourhood.length),
         dimensionNumber = this.currentArray.dimension,
         currentArgumentValue,
         isOutOfBound,
         internalArrayIndex,
         neighbourIndex, dimension;
 
-    for (neighbourIndex = 0; neighbourIndex < this.neighbours.length; neighbourIndex++) {
+    for (neighbourIndex = 0; neighbourIndex < this.neighbourhood.length; neighbourIndex++) {
         isOutOfBound = false;
         internalArrayIndex = 0;
 
         for (dimension = 0; dimension < dimensionNumber; dimension++) {
-            currentArgumentValue = arguments[dimension] + this.neighbours[neighbourIndex][dimension];
+            currentArgumentValue = arguments[dimension] + this.neighbourhood[neighbourIndex][dimension];
 
             if (currentArgumentValue < 0 || currentArgumentValue >= this.shape[dimension]) {
                 isOutOfBound = true;
