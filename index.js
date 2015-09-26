@@ -95,18 +95,34 @@ CellularAutomata.prototype.get = function () {
 CellularAutomata.prototype.getNeighbours = function () {
     var self = this,
         neighbourArguments = arguments,
-        getArguments = new Array(arguments.length),
-        neighbourValues = [],
+        stride = this.currentArray.stride,
+        neighbourValues = new Array(this.neighbours.length),
+        currentArgumentValue,
+        outOfBound,
+        index,
         i, k;
 
-    //TODO bypassing get may increase the performance, due to the arguments thing going on
-
     for (i = 0; i < this.neighbours.length; i++) {
+        currentArgumentValue = null;
+        outOfBound = false;
+        index = 0;
+
         for (k = 0; k < neighbourArguments.length; k++) {
-            getArguments[k] = neighbourArguments[k] + this.neighbours[i][k];
+            currentArgumentValue = neighbourArguments[k] + this.neighbours[i][k];
+
+            if (currentArgumentValue < 0 || currentArgumentValue >= this.shape[k]) {
+                outOfBound = true;
+            } else {
+                index += currentArgumentValue * stride[k];
+            }
         }
 
-        neighbourValues.push(this.get.apply(this, getArguments));
+        if (outOfBound) {
+            neighbourValues[i] = this.outOfBoundValue;
+        } else {
+            neighbourValues[i] = this.currentArray.data[index];
+        }
+
     }
 
     return neighbourValues;
