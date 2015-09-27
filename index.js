@@ -32,7 +32,10 @@ CellularAutomata.prototype.neighbourhoodType = null;
 CellularAutomata.prototype.neighbourhoodRange = null;
 CellularAutomata.prototype.neighbourhood = null;
 
-CellularAutomata.prototype.calculateNeighbours = function () {
+CellularAutomata.prototype.setNeighbourhood = function (neighbourhoodType, neighbourhoodRange) {
+    this.neighbourhoodType = !!distanceFunctions[neighbourhoodType] ? neighbourhoodType : 'moore';
+    this.neighbourhoodRange = neighbourhoodRange || 1;
+
     this.neighbourhood = distanceFunctions[this.neighbourhoodType](this.neighbourhoodRange, this.shape.length);
 };
 
@@ -50,21 +53,17 @@ CellularAutomata.prototype.setRule = function (rule, neighbourhoodType, neighbou
             throw new Error('The rulestring could not be parsed.');
         }
 
-        this.neighbourhoodType = this.rule.neighbourhoodType;
-        this.neighbourhoodRange = this.rule.neighbourhoodRange;
+        this.setNeighbourhood(this.rule.neighbourhoodType, this.rule.neighbourhoodRange);
     } else if(ruleType === 'function') {
         this.rule = {
             ruleType: 'custom',
             process: rule
         };
 
-        this.neighbourhoodType = neighbourhoodType === 'von-neumann' ? 'von-neumann' : 'moore';
-        this.neighbourhoodRange = neighbourhoodRange || 1;
+        this.setNeighbourhood(neighbourhoodType, neighbourhoodRange);
     } else {
         throw new Error('Invalid rule, neither a string nor a function.');
     }
-
-    this.calculateNeighbours();
 };
 
 CellularAutomata.prototype.get = function () {
