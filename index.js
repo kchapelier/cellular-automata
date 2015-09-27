@@ -11,6 +11,7 @@ var distanceFunctions = {
 };
 
 //TODO implement wrapping
+//TODO iterate is currently hardcoded as 2D, this should be fixed
 
 var CellularAutomata = function (shape, defaultValue) {
     this.shape = shape;
@@ -32,17 +33,42 @@ CellularAutomata.prototype.neighbourhoodType = null;
 CellularAutomata.prototype.neighbourhoodRange = null;
 CellularAutomata.prototype.neighbourhood = null;
 
+/**
+ * Define the neighbourhood type (moore or von-neumann) and range, pre-calculate the relative positions of the neighbours
+ * @param {string} [neighbourhoodType=null] moore or von-neumann
+ * @param {int} [neighbourhoodRange=1]
+ * @protected
+ * @returns {CellularAutomata} CellularAutomata instance for method chaining.
+ */
 CellularAutomata.prototype.setNeighbourhood = function (neighbourhoodType, neighbourhoodRange) {
     this.neighbourhoodType = !!distanceFunctions[neighbourhoodType] ? neighbourhoodType : 'moore';
     this.neighbourhoodRange = neighbourhoodRange || 1;
 
     this.neighbourhood = distanceFunctions[this.neighbourhoodType](this.neighbourhoodRange, this.shape.length);
+
+    return this;
 };
 
+/**
+ * Define the value used for the cells out of the array's bounds
+ * @param {int} outOfBoundValue
+ * @public
+ * @returns {CellularAutomata} CellularAutomata instance for method chaining.
+ */
 CellularAutomata.prototype.setOutOfBoundValue = function (outOfBoundValue) {
-    this.outOfBoundValue = outOfBoundValue;
+    this.outOfBoundValue = outOfBoundValue | 0;
+
+    return this;
 };
 
+/**
+ * Set the rule for the cellular automata
+ * @param {string|function} rule Either a rule string in the S/B, S/B/C or R/T/C/N format or a function accepting the current value as the first argument and the neighbours as the second argument.
+ * @param {string} [neighbourhoodType="moore"] Neighbourhood type (moore or von-neumann), only used when the rule is a function.
+ * @param {int} [neighbourhoodRange=1] Neighbourhood range, only used when the rule is a function.
+ * @public
+ * @returns {CellularAutomata} CellularAutomata instance for method chaining.
+ */
 CellularAutomata.prototype.setRule = function (rule, neighbourhoodType, neighbourhoodRange) {
     var ruleType = typeof rule;
 
@@ -64,8 +90,14 @@ CellularAutomata.prototype.setRule = function (rule, neighbourhoodType, neighbou
     } else {
         throw new Error('Invalid rule, neither a string nor a function.');
     }
+
+    return this;
 };
 
+/**
+ * @protected
+ * @returns {*}
+ */
 CellularAutomata.prototype.get = function () {
     var stride = this.currentArray.stride,
         internalArrayIndex = 0,
@@ -82,6 +114,10 @@ CellularAutomata.prototype.get = function () {
     return this.currentArray.data[internalArrayIndex];
 };
 
+/**
+ * @protected
+ * @returns {Array}
+ */
 CellularAutomata.prototype.getNeighbours = function () {
     var stride = this.currentArray.stride,
         neighbourValues = new Array(this.neighbourhood.length),
@@ -111,22 +147,26 @@ CellularAutomata.prototype.getNeighbours = function () {
     return neighbourValues;
 };
 
+/**
+ * Switch the current and the working array
+ * @protected
+ */
 CellularAutomata.prototype.switchArrays = function () {
     var temp = this.currentArray;
     this.currentArray = this.workingArray;
     this.workingArray = temp;
 };
 
-CellularAutomata.prototype.singleIteration = function () {
-    this.iterate(1);
-};
-
+/**
+ * Make multiple iterations
+ * @param {int} iterationNumber Number of iterations
+ * @public
+ * @returns {CellularAutomata} CellularAutomata instance for method chaining.
+ */
 CellularAutomata.prototype.iterate = function (iterationNumber) {
     var x, y, i;
 
     for (i = 0; i < iterationNumber; i++) {
-        //TODO do not hardcode it as 2D
-
         for (x = 0; x < this.shape[0]; x++) {
             for (y = 0; y < this.shape[1]; y++) {
                 this.workingArray.set(x, y, this.rule.process(this.get(x, y), this.getNeighbours(x, y)));
@@ -135,6 +175,8 @@ CellularAutomata.prototype.iterate = function (iterationNumber) {
 
         this.switchArrays();
     }
+
+    return this;
 };
 
 module.exports = CellularAutomata;
