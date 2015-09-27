@@ -34,6 +34,34 @@ CellularAutomata.prototype.neighbourhoodType = null;
 CellularAutomata.prototype.neighbourhoodRange = null;
 CellularAutomata.prototype.neighbourhood = null;
 
+CellularAutomata.prototype.setWithDistribution = function (distributions, rng) {
+    var sum = 0,
+        array = this.currentArray.data,
+        numberOfDistributions = distributions.length,
+        selection,
+        i, k;
+
+    rng = rng || Math.random;
+
+    for (i = 0; i < numberOfDistributions; i++) {
+        sum += distributions[i][1];
+    }
+
+    for (k = 0; k < array.length; k++) {
+        selection = rng() * sum;
+
+        for (i = 0; i < numberOfDistributions; i++) {
+            selection -= distributions[i][1];
+            if (selection <= 0) {
+                array[k] = distributions[i][0];
+                break;
+            }
+        }
+    }
+
+    return this;
+};
+
 /**
  * Replace values in the grid
  * @param {Object} replacements Object with search value as key and replacement as value
