@@ -1,25 +1,13 @@
 "use strict";
 
-var ndarray = require('ndarray'),
-    moore = require('moore'),
+var moore = require('moore'),
     vonNeumann = require('von-neumann'),
-    parser = require('cellular-automata-rule-parser');
+    parser = require('cellular-automata-rule-parser'),
+    utils = require('./utils/utils');
 
 var distanceFunctions = {
     'moore': moore,
     'von-neumann': vonNeumann
-};
-
-var createArray = function (shape, defaultValue) {
-    var length = shape.reduce(function (p, v) { return p * v; }, 1),
-        dataArray = new Int8Array(length),
-        i;
-
-    for (i = 0; i < length; i++) {
-        dataArray[i] = defaultValue;
-    }
-
-    return ndarray(dataArray, shape);
 };
 
 //TODO implement wrapping
@@ -28,8 +16,8 @@ var CellularAutomata = function (shape, defaultValue) {
     this.shape = shape;
     this.defaultValue = defaultValue || 0;
 
-    this.currentArray = createArray(this.shape, this.defaultValue);
-    this.workingArray = createArray(this.shape, this.defaultValue);
+    this.currentArray = utils.createArray(this.shape, this.defaultValue);
+    this.workingArray = utils.createArray(this.shape, this.defaultValue);
 };
 
 CellularAutomata.prototype.shape = null;
@@ -80,16 +68,19 @@ CellularAutomata.prototype.setRule = function (rule, neighbourhoodType, neighbou
 };
 
 CellularAutomata.prototype.get = function () {
-    var i = 0,
-        value;
+    var stride = this.currentArray.stride,
+        internalArrayIndex = 0,
+        dimension = 0;
 
-    for (; i < arguments.length; i++) {
-        if (arguments[i] < 0 || arguments[i] >= this.shape[i]) {
+    for (; dimension < arguments.length; dimension++) {
+        if (arguments[dimension] < 0 || arguments[dimension] >= this.shape[dimension]) {
             return this.outOfBoundValue;
+        } else {
+            internalArrayIndex += arguments[dimension] * stride[dimension];
         }
     }
 
-    return this.currentArray.get.apply(this.currentArray, arguments);
+    return this.currentArray.data[internalArrayIndex];
 };
 
 CellularAutomata.prototype.getNeighbours = function () {
@@ -128,24 +119,22 @@ CellularAutomata.prototype.switchArrays = function () {
 };
 
 CellularAutomata.prototype.singleIteration = function () {
-    //TODO do not hardcode it as 2D
-
-    var x, y;
-
-    for (x = 0; x < this.shape[0]; x++) {
-        for (y = 0; y < this.shape[1]; y++) {
-            this.workingArray.set(x, y, this.rule.process(this.get(x, y), this.getNeighbours(x, y)));
-        }
-    }
-
-    this.switchArrays();
+    this.iterate(1);
 };
 
 CellularAutomata.prototype.iterate = function (iterationNumber) {
-    var i;
+    var x, y, i;
 
     for (i = 0; i < iterationNumber; i++) {
-        this.singleIteration();
+        //TODO do not hardcode it as 2D
+
+        for (x = 0; x < this.shape[0]; x++) {
+            for (y = 0; y < this.shape[1]; y++) {
+                this.workingArray.set(x, y, this.rule.process(this.get(x, y), this.getNeighbours(x, y)));
+            }
+        }
+
+        this.switchArrays();
     }
 };
 
