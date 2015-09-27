@@ -12,6 +12,7 @@ var distanceFunctions = {
 
 //TODO implement wrapping
 //TODO iterate is currently hardcoded as 2D, this should be fixed
+//TODO set with distribution (with a provided rng)
 
 var CellularAutomata = function (shape, defaultValue) {
     this.shape = shape;
@@ -32,6 +33,29 @@ CellularAutomata.prototype.rule = null;
 CellularAutomata.prototype.neighbourhoodType = null;
 CellularAutomata.prototype.neighbourhoodRange = null;
 CellularAutomata.prototype.neighbourhood = null;
+
+/**
+ * Replace values in the grid
+ * @param {Object} replacements Object with search value as key and replacement as value
+ * @returns {CellularAutomata} CellularAutomata instance for method chaining.
+ */
+CellularAutomata.prototype.replace = function (replacements) {
+    var i = 0,
+        array = this.currentArray.data,
+        value;
+
+    for (; i < array.length; i++) {
+        value = array[i];
+
+        if (value in replacements) {
+            value = replacements[value];
+        }
+
+        array[i] = value;
+    }
+
+    return this;
+};
 
 /**
  * Define the neighbourhood type (moore or von-neumann) and range, pre-calculate the relative positions of the neighbours
