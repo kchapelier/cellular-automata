@@ -181,7 +181,7 @@ CellularAutomata.prototype.getNeighbours = function () {
 
     for (neighbourIndex = 0; neighbourIndex < this.neighbourhood.length; neighbourIndex++) {
         isOutOfBound = false;
-        internalArrayIndex = 0;
+        internalArrayIndex = this.currentArray.offset;
 
         for (dimension = 0; dimension < dimensionNumber; dimension++) {
             currentArgumentValue = arguments[dimension] + this.neighbourhood[neighbourIndex][dimension];
