@@ -218,6 +218,8 @@ CellularAutomata.prototype.switchArrays = function () {
 CellularAutomata.prototype.iterate = function (iterationNumber) {
     var x, y, i;
 
+    iterationNumber = iterationNumber || 1;
+
     for (i = 0; i < iterationNumber; i++) {
         for (x = 0; x < this.shape[0]; x++) {
             for (y = 0; y < this.shape[1]; y++) {
