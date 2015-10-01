@@ -25,6 +25,7 @@ var CellularAutomata = function (shape, defaultValue) {
 CellularAutomata.prototype.shape = null;
 CellularAutomata.prototype.defaultValue = null;
 CellularAutomata.prototype.outOfBoundValue = null;
+CellularAutomata.prototype.outOfBoundWrapping = false;
 
 CellularAutomata.prototype.currentArray = null;
 CellularAutomata.prototype.workingArray = null;
@@ -103,12 +104,18 @@ CellularAutomata.prototype.setNeighbourhood = function (neighbourhoodType, neigh
 
 /**
  * Define the value used for the cells out of the array's bounds
- * @param {int} outOfBoundValue
+ * @param {int|string} outOfBoundValue
  * @public
  * @returns {CellularAutomata} CellularAutomata instance for method chaining.
  */
 CellularAutomata.prototype.setOutOfBoundValue = function (outOfBoundValue) {
-    this.outOfBoundValue = outOfBoundValue | 0;
+    if (outOfBoundValue === 'wrap') {
+        this.outOfBoundWrapping = true;
+        this.outOfBoundValue = 0;
+    } else {
+        this.outOfBoundWrapping = false;
+        this.outOfBoundValue = outOfBoundValue | 0;
+    }
 
     return this;
 };
@@ -187,7 +194,15 @@ CellularAutomata.prototype.getNeighbours = function () {
             currentArgumentValue = arguments[dimension] + this.neighbourhood[neighbourIndex][dimension];
 
             if (currentArgumentValue < 0 || currentArgumentValue >= this.shape[dimension]) {
-                isOutOfBound = true;
+                if (this.outOfBoundWrapping) {
+                    // euclidean modulo
+                    currentArgumentValue = currentArgumentValue % this.shape[dimension];
+                    currentArgumentValue = currentArgumentValue < 0 ? currentArgumentValue + Math.abs(this.shape[dimension]) : currentArgumentValue;
+
+                    internalArrayIndex += currentArgumentValue * stride[dimension];
+                } else {
+                    isOutOfBound = true;
+                }
             } else {
                 internalArrayIndex += currentArgumentValue * stride[dimension];
             }
