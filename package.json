@@ -13,6 +13,6 @@
     "moore": "0.0.2",
     "von-neumann": "^1.0.0",
     "ndarray": "^1.0.18",
-    "cellular-automata-rule-parser": "0.0.2"
+    "cellular-automata-rule-parser": "0.0.3"
   }
 }
