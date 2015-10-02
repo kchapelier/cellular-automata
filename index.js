@@ -231,16 +231,27 @@ CellularAutomata.prototype.switchArrays = function () {
  * @returns {CellularAutomata} CellularAutomata instance for method chaining.
  */
 CellularAutomata.prototype.iterate = function (iterationNumber) {
-    var x, y, i;
+    var arrayLength = this.currentArray.data.length,
+        x, y, i;
 
     iterationNumber = iterationNumber || 1;
 
     for (i = 0; i < iterationNumber; i++) {
+
+        /* */
+        for (var index = 0; index < arrayLength; index++) {
+            y = index % this.shape[1];
+            x = ((index) / this.shape[1]) | 0;
+
+            this.workingArray.set(x, y, this.rule.process(this.currentArray.data[index], this.getNeighbours(x, y)));
+        }
+        /*/
         for (x = 0; x < this.shape[0]; x++) {
             for (y = 0; y < this.shape[1]; y++) {
-                this.workingArray.set(x, y, this.rule.process(this.get(x, y), this.getNeighbours(x, y)));
+                this.workingArray.set(x, y, this.rule.process(this.currentArray.get(x, y), this.getNeighbours(x, y)));
             }
         }
+        /* */
 
         this.switchArrays();
     }
