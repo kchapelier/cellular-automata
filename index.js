@@ -252,5 +252,9 @@ CellularAutomata.prototype.iterate = function (iterationNumber) {
     return this;
 };
 
+CellularAutomata.prototype.apply = function (rule, iteration) {
+    return this.setRule(rule, 'moore', 1).iterate(iteration);
+};
+
 module.exports = CellularAutomata;
 
