@@ -10,10 +10,6 @@ var distanceFunctions = {
     'von-neumann': vonNeumann
 };
 
-//TODO implement wrapping
-//TODO iterate is currently hardcoded as 2D, this should be fixed
-//TODO set with distribution (with a provided rng)
-
 var CellularAutomata = function (shape, defaultValue) {
     this.shape = shape;
     this.defaultValue = defaultValue || 0;
@@ -232,26 +228,23 @@ CellularAutomata.prototype.switchArrays = function () {
  */
 CellularAutomata.prototype.iterate = function (iterationNumber) {
     var arrayLength = this.currentArray.data.length,
-        x, y, i;
+        dimensionNumber = this.shape.length,
+        stride = this.currentArray.stride,
+        shape = this.currentArray.shape,
+        neighboursArguments = new Array(dimensionNumber),
+        index, currentIteration, currentDimension;
 
     iterationNumber = iterationNumber || 1;
 
-    for (i = 0; i < iterationNumber; i++) {
+    for (currentIteration = 0; currentIteration < iterationNumber; currentIteration++) {
 
-        /* */
-        for (var index = 0; index < arrayLength; index++) {
-            y = index % this.shape[1];
-            x = ((index) / this.shape[1]) | 0;
-
-            this.workingArray.set(x, y, this.rule.process(this.currentArray.data[index], this.getNeighbours(x, y)));
-        }
-        /*/
-        for (x = 0; x < this.shape[0]; x++) {
-            for (y = 0; y < this.shape[1]; y++) {
-                this.workingArray.set(x, y, this.rule.process(this.currentArray.get(x, y), this.getNeighbours(x, y)));
+        for (index = 0; index < arrayLength; index++) {
+            for (currentDimension = 0; currentDimension < dimensionNumber; currentDimension++) {
+                neighboursArguments[currentDimension] = ((index / stride[currentDimension]) | 0) % shape[currentDimension];
             }
+
+            this.workingArray.data[index] = this.rule.process(this.currentArray.data[index], this.getNeighbours.apply(this, neighboursArguments));
         }
-        /* */
 
         this.switchArrays();
     }
