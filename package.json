@@ -1,13 +1,27 @@
 {
   "name": "cellular-automata",
   "version": "0.0.1",
-  "description": "",
+  "description": "Cellular automata runner",
   "main": "index.js",
   "scripts": {
     "test": "mocha test/"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kchapelier/cellular-automata.git"
+  },
+  "keywords": [
+    "automata",
+    "cellular",
+    "parser"
+  ],
   "author": "Kevin Chapelier",
   "license": "MIT",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/kchapelier/cellular-automata/issues"
+  },
+  "homepage": "https://github.com/kchapelier/cellular-automata",
   "dependencies": {
     "moore": "0.0.2",
     "von-neumann": "^1.0.0",
