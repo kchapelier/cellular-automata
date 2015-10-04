@@ -10,6 +10,8 @@ var distanceFunctions = {
     'von-neumann': vonNeumann
 };
 
+//TODO test single typed array for all getNeighbours calls for perfs
+
 var CellularAutomata = function (shape, defaultValue) {
     this.shape = shape;
     this.defaultValue = defaultValue || 0;
@@ -31,7 +33,13 @@ CellularAutomata.prototype.neighbourhoodType = null;
 CellularAutomata.prototype.neighbourhoodRange = null;
 CellularAutomata.prototype.neighbourhood = null;
 
-CellularAutomata.prototype.setWithDistribution = function (distributions, rng) {
+/**
+ * Fill the grid with a given distribution
+ * @param {Array[]} distributions The distribution to fill the grid with (ie: [[0,90], [1,10]] for 90% of 0 and 10% of 1)
+ * @param {function} [rng=Math.random] A random number generation function, default to Math.random()
+ * @returns {CellularAutomata} CellularAutomata instance for method chaining.
+ */
+CellularAutomata.prototype.fillWithDistribution = function (distributions, rng) {
     var sum = 0,
         array = this.currentArray.data,
         numberOfDistributions = distributions.length,
@@ -62,6 +70,7 @@ CellularAutomata.prototype.setWithDistribution = function (distributions, rng) {
 /**
  * Replace values in the grid
  * @param {Object} replacements Object with search value as key and replacement as value
+ * @protected
  * @returns {CellularAutomata} CellularAutomata instance for method chaining.
  */
 CellularAutomata.prototype.replace = function (replacements) {
@@ -100,7 +109,7 @@ CellularAutomata.prototype.setNeighbourhood = function (neighbourhoodType, neigh
 
 /**
  * Define the value used for the cells out of the array's bounds
- * @param {int|string} outOfBoundValue
+ * @param {int|string} outOfBoundValue Any integer value or the string "wrap" to enable out of bound wrapping.
  * @public
  * @returns {CellularAutomata} CellularAutomata instance for method chaining.
  */
@@ -150,26 +159,7 @@ CellularAutomata.prototype.setRule = function (rule, neighbourhoodType, neighbou
 };
 
 /**
- * @protected
- * @returns {*}
- */
-CellularAutomata.prototype.get = function () {
-    var stride = this.currentArray.stride,
-        internalArrayIndex = 0,
-        dimension = 0;
-
-    for (; dimension < arguments.length; dimension++) {
-        if (arguments[dimension] < 0 || arguments[dimension] >= this.shape[dimension]) {
-            return this.outOfBoundValue;
-        } else {
-            internalArrayIndex += arguments[dimension] * stride[dimension];
-        }
-    }
-
-    return this.currentArray.data[internalArrayIndex];
-};
-
-/**
+ * Obtain all the neighbours for a given cell, the current neighbourhood type and range
  * @protected
  * @returns {Array}
  */
@@ -222,7 +212,7 @@ CellularAutomata.prototype.switchArrays = function () {
 
 /**
  * Make multiple iterations
- * @param {int} iterationNumber Number of iterations
+ * @param {int} [iterationNumber=1] Number of iterations
  * @public
  * @returns {CellularAutomata} CellularAutomata instance for method chaining.
  */
@@ -252,8 +242,17 @@ CellularAutomata.prototype.iterate = function (iterationNumber) {
     return this;
 };
 
-CellularAutomata.prototype.apply = function (rule, iteration) {
-    return this.setRule(rule, 'moore', 1).iterate(iteration);
+/**
+ * Apply a given rule for a given number of iterations, shortcut method for setRule and iterate
+ * @param {string|function} rule Either a rule string in a format supported by the rule parser or a function accepting the current value as the first argument and the neighbours as the second argument.
+ * @param {int} [iteration=1] Number of iterations
+ * @param {string} [neighbourhoodType="moore"] Neighbourhood type (moore or von-neumann), only used when the rule is a function.
+ * @param {int} [neighbourhoodRange=1] Neighbourhood range, only used when the rule is a function.
+ * @public
+ * @returns {CellularAutomata} CellularAutomata instance for method chaining.
+ */
+CellularAutomata.prototype.apply = function (rule, iteration, neighbourhoodType, neighbourhoodRange) {
+    return this.setRule(rule, neighbourhoodType, neighbourhoodRange).iterate(iteration);
 };
 
 module.exports = CellularAutomata;

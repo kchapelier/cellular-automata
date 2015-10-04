@@ -32,7 +32,7 @@ var CellularAutomata = require('cellular-automata');
 var cellularAutomata = new CellularAutomata([200, 80]);
 
 // fill the array with 95% of 0 values and 5% of 1 values
-cellularAutomata.setWithDistribution([[0, 95], [1, 5]]);
+cellularAutomata.fillWithDistribution([[0, 95], [1, 5]]);
 
 // define that the value out of the array should be interpreted as 0 values
 cellularAutomata.setOutOfBoundValue(0);
@@ -46,7 +46,7 @@ console.log(cellularAutomata.currentArray); // ndarray containing the result
 
 ### Result as an image
 
-![cellular automata example](https://github.com/kchapelier/cellular-automata/raw/master/readme1.png "First example")
+<img src="https://github.com/kchapelier/cellular-automata/raw/master/readme1.png" style="image-rendering:pixelated; width:400px;"></img>
 
 ### Code
 
@@ -66,7 +66,7 @@ console.log(cellularAutomata.currentArray); // ndarray containing the result
 
 ### Result as an image
 
-![cellular automata example](https://github.com/kchapelier/cellular-automata/raw/master/readme2.png "Second example")
+<img src="https://github.com/kchapelier/cellular-automata/raw/master/readme2.png" style="image-rendering:pixelated; width:150px;"></img>
 
 ## Changelog
 
