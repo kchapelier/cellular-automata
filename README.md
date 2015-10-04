@@ -16,8 +16,8 @@ npm test
 
 ## Features
 
-- Doesn't have any dependency to the DOM (no canvas element)
-- Can easily apply different successive rules
+- Doesn't have any dependency to the DOM (no canvas element).
+- Can easily apply different successive rules.
 - Can be used in any dimension (1D, 2D, 3D ad more).
 - Allow the cellular automata rules to be passed as a string in one of several common CA rule format, see [cellular-automata-rule-parser]().
 
@@ -70,11 +70,14 @@ console.log(cellularAutomata.currentArray); // ndarray containing the result
 
 ## Changelog
 
-...
+0.0.1 (2015-10-04) :
+
+- First implementation.
 
 ## Roadmap
 
-...
+- More tests.
+- More docs.
 
 ## License
 
