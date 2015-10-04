@@ -1,11 +1,10 @@
 {
   "name": "cellular-automata",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test/"
   },
   "author": "Kevin Chapelier",
   "license": "MIT",
@@ -14,5 +13,9 @@
     "von-neumann": "^1.0.0",
     "ndarray": "^1.0.18",
     "cellular-automata-rule-parser": "0.0.4"
+  },
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "mocha": "^2.3.3"
   }
 }
