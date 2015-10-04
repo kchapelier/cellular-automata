@@ -49,6 +49,60 @@ describe('Applying rules', function () {
         });
     });
 
+    describe('iterate()', function () {
+        it('should implicitly make on iteration', function () {
+            var ca = new CA([3,3]);
+
+            ca.currentArray.set(1,1,1);
+
+            ca.setRule('S/B12V');
+            ca.iterate();
+
+            // 0 1 0
+            ca.currentArray.get(0,0).should.equal(0);
+            ca.currentArray.get(1,0).should.equal(1);
+            ca.currentArray.get(2,0).should.equal(0);
+            // 1 0 1
+            ca.currentArray.get(0,1).should.equal(1);
+            ca.currentArray.get(1,1).should.equal(0);
+            ca.currentArray.get(2,1).should.equal(1);
+            // 0 1 0
+            ca.currentArray.get(0,2).should.equal(0);
+            ca.currentArray.get(1,2).should.equal(1);
+            ca.currentArray.get(2,2).should.equal(0);
+        });
+
+        it('should allow to make multiple iterations', function () {
+            var ca = new CA([3,3]);
+
+            ca.currentArray.set(1,1,1);
+
+            ca.setRule('S/B12V');
+            ca.iterate(2);
+
+            // 1 0 1
+            ca.currentArray.get(0,0).should.equal(1);
+            ca.currentArray.get(1,0).should.equal(0);
+            ca.currentArray.get(2,0).should.equal(1);
+            // 0 0 0
+            ca.currentArray.get(0,1).should.equal(0);
+            ca.currentArray.get(1,1).should.equal(0);
+            ca.currentArray.get(2,1).should.equal(0);
+            // 1 0 1
+            ca.currentArray.get(0,2).should.equal(1);
+            ca.currentArray.get(1,2).should.equal(0);
+            ca.currentArray.get(2,2).should.equal(1);
+        });
+
+        it('should return the instance of the CellularAutomata', function () {
+            var ca = new CA([3,3]);
+
+            ca.setRule('S/B12V');
+
+            ca.iterate(2).should.equal(ca);
+        });
+    });
+
     describe('apply() shortcut method', function () {
         it('should implicitly make one iteration', function () {
             var ca = new CA([3,3]);
