@@ -10,8 +10,6 @@ var distanceFunctions = {
     'von-neumann': vonNeumann
 };
 
-//TODO test single typed array for all getNeighbours calls for perfs
-
 var CellularAutomata = function (shape, defaultValue) {
     this.shape = shape;
     this.defaultValue = defaultValue || 0;
@@ -103,6 +101,7 @@ CellularAutomata.prototype.setNeighbourhood = function (neighbourhoodType, neigh
     this.neighbourhoodRange = neighbourhoodRange || 1;
 
     this.neighbourhood = distanceFunctions[this.neighbourhoodType](this.neighbourhoodRange, this.shape.length);
+    this.neighbourhoodValues = new Uint8Array(this.neighbourhood.length);
 
     return this;
 };
@@ -165,7 +164,7 @@ CellularAutomata.prototype.setRule = function (rule, neighbourhoodType, neighbou
  */
 CellularAutomata.prototype.getNeighbours = function () {
     var stride = this.currentArray.stride,
-        neighbourValues = new Array(this.neighbourhood.length),
+        neighbourValues = this.neighbourhoodValues,
         dimensionNumber = this.currentArray.dimension,
         currentArgumentValue,
         isOutOfBound,
