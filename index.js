@@ -10,15 +10,26 @@ var distanceFunctions = {
     'von-neumann': vonNeumann
 };
 
+/**
+ * CellularAutomata constructor
+ * @param {int[]} shape Dimensions of the grid
+ * @param {int} [defaultValue=0] Default values of the cells
+ * @constructor
+ */
 var CellularAutomata = function (shape, defaultValue) {
     this.shape = shape;
+    this.dimensions = shape.length;
     this.defaultValue = defaultValue || 0;
 
     this.currentArray = utils.createArray(this.shape, this.defaultValue);
     this.workingArray = utils.createArray(this.shape, this.defaultValue);
+
+    this.stride = this.currentArray.stride;
 };
 
 CellularAutomata.prototype.shape = null;
+CellularAutomata.prototype.stride = null;
+CellularAutomata.prototype.dimensions = null;
 CellularAutomata.prototype.defaultValue = null;
 CellularAutomata.prototype.outOfBoundValue = null;
 CellularAutomata.prototype.outOfBoundWrapping = false;
@@ -30,6 +41,8 @@ CellularAutomata.prototype.rule = null;
 CellularAutomata.prototype.neighbourhoodType = null;
 CellularAutomata.prototype.neighbourhoodRange = null;
 CellularAutomata.prototype.neighbourhood = null;
+CellularAutomata.prototype.neighbourhoodNumber = null;
+CellularAutomata.prototype.neighbourhoodValues = null;
 
 /**
  * Fill the grid with a given distribution
@@ -100,8 +113,9 @@ CellularAutomata.prototype.setNeighbourhood = function (neighbourhoodType, neigh
     this.neighbourhoodType = !!distanceFunctions[neighbourhoodType] ? neighbourhoodType : 'moore';
     this.neighbourhoodRange = neighbourhoodRange || 1;
 
-    this.neighbourhood = distanceFunctions[this.neighbourhoodType](this.neighbourhoodRange, this.shape.length);
-    this.neighbourhoodValues = new Uint8Array(this.neighbourhood.length);
+    this.neighbourhood = distanceFunctions[this.neighbourhoodType](this.neighbourhoodRange, this.dimensions);
+    this.neighbourhoodNumber = this.neighbourhood.length;
+    this.neighbourhoodValues = new Uint8Array(this.neighbourhoodNumber);
 
     return this;
 };
@@ -163,15 +177,15 @@ CellularAutomata.prototype.setRule = function (rule, neighbourhoodType, neighbou
  * @returns {Array}
  */
 CellularAutomata.prototype.getNeighbours = function () {
-    var stride = this.currentArray.stride,
+    var stride = this.stride,
         neighbourValues = this.neighbourhoodValues,
-        dimensionNumber = this.currentArray.dimension,
+        dimensionNumber = this.dimensions,
         currentArgumentValue,
         isOutOfBound,
         internalArrayIndex,
         neighbourIndex, dimension;
 
-    for (neighbourIndex = 0; neighbourIndex < this.neighbourhood.length; neighbourIndex++) {
+    for (neighbourIndex = 0; neighbourIndex < this.neighbourhoodNumber; neighbourIndex++) {
         isOutOfBound = false;
         internalArrayIndex = this.currentArray.offset;
 
@@ -217,9 +231,9 @@ CellularAutomata.prototype.switchArrays = function () {
  */
 CellularAutomata.prototype.iterate = function (iterationNumber) {
     var arrayLength = this.currentArray.data.length,
-        dimensionNumber = this.shape.length,
-        stride = this.currentArray.stride,
-        shape = this.currentArray.shape,
+        dimensionNumber = this.dimensions,
+        stride = this.stride,
+        shape = this.shape,
         neighboursArguments = new Array(dimensionNumber),
         index, currentIteration, currentDimension;
 
