@@ -70,6 +70,10 @@ console.log(cellularAutomata.currentArray); // ndarray containing the result
 
 ## Changelog
 
+0.0.2 (2015-10-13) :
+
+- Update the rule parser.
+
 0.0.1 (2015-10-04) :
 
 - First implementation.
