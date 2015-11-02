@@ -70,6 +70,12 @@ console.log(cellularAutomata.currentArray); // ndarray containing the result
 
 ## Changelog
 
+0.1.0 (2015-11-02) :
+
+- Update the rule parser.
+- Supports unconventional neighbourhood types (axis, corner, edge and face).
+- Sort neighbourhood to allow position dependent rules.
+
 0.0.3 (2015-10-17) :
 
 - Update the rule parser.

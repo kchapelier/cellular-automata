@@ -2,12 +2,17 @@
 
 var moore = require('moore'),
     vonNeumann = require('von-neumann'),
+    unconventionalNeighbours = require('unconventional-neighbours'),
     parser = require('cellular-automata-rule-parser'),
     utils = require('./utils/utils');
 
 var distanceFunctions = {
     'moore': moore,
-    'von-neumann': vonNeumann
+    'von-neumann': vonNeumann,
+    'axis': unconventionalNeighbours.axis,
+    'corner': unconventionalNeighbours.corner,
+    'edge': unconventionalNeighbours.edge,
+    'face': unconventionalNeighbours.face
 };
 
 /**
@@ -102,6 +107,13 @@ CellularAutomata.prototype.replace = function (replacements) {
     return this;
 };
 
+
+var neighbourhoodSorter = function neighbourhoodSorter (a, b) {
+    a = a.join(',');
+    b = b.join(',');
+    return a > b ? 1 : a < b ? -1 : 0;
+};
+
 /**
  * Define the neighbourhood type (moore or von-neumann) and range, pre-calculate the relative positions of the neighbours
  * @param {string} [neighbourhoodType=null] moore or von-neumann
@@ -114,6 +126,7 @@ CellularAutomata.prototype.setNeighbourhood = function (neighbourhoodType, neigh
     this.neighbourhoodRange = neighbourhoodRange || 1;
 
     this.neighbourhood = distanceFunctions[this.neighbourhoodType](this.neighbourhoodRange, this.dimensions);
+    this.neighbourhood.sort(neighbourhoodSorter);
     this.neighbourhoodNumber = this.neighbourhood.length;
     this.neighbourhoodValues = new Uint8Array(this.neighbourhoodNumber);
 
@@ -269,4 +282,3 @@ CellularAutomata.prototype.apply = function (rule, iteration, neighbourhoodType,
 };
 
 module.exports = CellularAutomata;
-
