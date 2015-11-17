@@ -73,7 +73,7 @@ CellularAutomata.prototype.fillWithDistribution = function (distributions, rng) 
 
         for (i = 0; i < numberOfDistributions; i++) {
             selection -= distributions[i][1];
-            if (selection <= 0) {
+            if (selection <= 0 && distributions[i][0] !== null) {
                 array[k] = distributions[i][0];
                 break;
             }

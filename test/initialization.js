@@ -69,5 +69,12 @@ describe('Initialization', function () {
 
             ca.fillWithDistribution([[0,50], [1,50]]).should.equal(ca);
         });
+
+        it('should not affect the grid with null values', function () {
+            var ca = new CA([1,1], 1);
+
+            ca.fillWithDistribution([[null,100]]);
+            ca.currentArray.get(0,0).should.equal(1);
+        });
     });
 });
