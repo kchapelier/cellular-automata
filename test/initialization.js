@@ -8,7 +8,7 @@ describe('Initialization', function () {
         it('should support 1d grid', function () {
             var ca = new CA([4]);
 
-            ca.dimensions.should.equal(1);
+            ca.dimension.should.equal(1);
             ca.shape.should.deep.equal([4]);
             ca.currentArray.data.length.should.equal(4);
         });
@@ -16,7 +16,7 @@ describe('Initialization', function () {
         it('should support 2d grid', function () {
             var ca = new CA([4, 3]);
 
-            ca.dimensions.should.equal(2);
+            ca.dimension.should.equal(2);
             ca.shape.should.deep.equal([4, 3]);
             ca.currentArray.data.length.should.equal(12);
         });
@@ -24,7 +24,7 @@ describe('Initialization', function () {
         it('should support 3d grid', function () {
             var ca = new CA([4, 3, 2]);
 
-            ca.dimensions.should.equal(3);
+            ca.dimension.should.equal(3);
             ca.shape.should.deep.equal([4, 3, 2]);
             ca.currentArray.data.length.should.equal(24);
         });

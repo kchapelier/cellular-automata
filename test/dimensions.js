@@ -7,7 +7,7 @@ describe('Using different dimensions', function () {
     it('should support 1D', function () {
         var ca = new CA([3]);
 
-        ca.dimensions.should.equal(1);
+        ca.dimension.should.equal(1);
 
         ca.currentArray.set(1, 1);
 
@@ -23,7 +23,7 @@ describe('Using different dimensions', function () {
     it('should support 2D', function () {
         var ca = new CA([3,3]);
 
-        ca.dimensions.should.equal(2);
+        ca.dimension.should.equal(2);
 
         ca.currentArray.set(1, 1, 1);
 
@@ -48,7 +48,7 @@ describe('Using different dimensions', function () {
     it('should support 3D', function () {
         var ca = new CA([3,3,3]);
 
-        ca.dimensions.should.equal(3);
+        ca.dimension.should.equal(3);
 
         ca.currentArray.set(1, 1, 1, 1);
 

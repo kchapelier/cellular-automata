@@ -1,19 +1,8 @@
 "use strict";
 
-var moore = require('moore'),
-    vonNeumann = require('von-neumann'),
-    unconventionalNeighbours = require('unconventional-neighbours'),
-    parser = require('cellular-automata-rule-parser'),
+var parser = require('cellular-automata-rule-parser'),
+    neighbourhoodFunctions = require('./utils/neighbourhood-functions'),
     utils = require('./utils/utils');
-
-var distanceFunctions = {
-    'moore': moore,
-    'von-neumann': vonNeumann,
-    'axis': unconventionalNeighbours.axis,
-    'corner': unconventionalNeighbours.corner,
-    'edge': unconventionalNeighbours.edge,
-    'face': unconventionalNeighbours.face
-};
 
 /**
  * CellularAutomata constructor
@@ -23,31 +12,33 @@ var distanceFunctions = {
  */
 var CellularAutomata = function (shape, defaultValue) {
     this.shape = shape;
-    this.dimensions = shape.length;
-    this.defaultValue = defaultValue || 0;
+    this.dimension = shape.length;
 
-    this.currentArray = utils.createArray(this.shape, this.defaultValue);
-    this.workingArray = utils.createArray(this.shape, this.defaultValue);
+    defaultValue = defaultValue || 0;
+
+    this.currentArray = utils.createArray(shape, defaultValue);
+    this.workingArray = utils.createArray(shape, defaultValue);
 
     this.stride = this.currentArray.stride;
 };
 
 CellularAutomata.prototype.shape = null;
 CellularAutomata.prototype.stride = null;
-CellularAutomata.prototype.dimensions = null;
-CellularAutomata.prototype.defaultValue = null;
-CellularAutomata.prototype.outOfBoundValue = null;
-CellularAutomata.prototype.outOfBoundWrapping = false;
+CellularAutomata.prototype.dimension = null;
 
 CellularAutomata.prototype.currentArray = null;
 CellularAutomata.prototype.workingArray = null;
 
 CellularAutomata.prototype.rule = null;
+
 CellularAutomata.prototype.neighbourhoodType = null;
 CellularAutomata.prototype.neighbourhoodRange = null;
 CellularAutomata.prototype.neighbourhood = null;
 CellularAutomata.prototype.neighbourhoodNumber = null;
 CellularAutomata.prototype.neighbourhoodValues = null;
+
+CellularAutomata.prototype.outOfBoundValue = null;
+CellularAutomata.prototype.outOfBoundWrapping = false;
 
 /**
  * Fill the grid with a given distribution
@@ -60,7 +51,8 @@ CellularAutomata.prototype.fillWithDistribution = function (distributions, rng) 
         array = this.currentArray.data,
         numberOfDistributions = distributions.length,
         selection,
-        i, k;
+        i,
+        k;
 
     rng = rng || Math.random;
 
@@ -107,7 +99,12 @@ CellularAutomata.prototype.replace = function (replacements) {
     return this;
 };
 
-
+/**
+ * Sort the neighbourhood from left to right, top to bottom, ...
+ * @param {Array} a First neighbour
+ * @param {Array} b Second neighbour
+ * @returns {number}
+ */
 var neighbourhoodSorter = function neighbourhoodSorter (a, b) {
     a = a.join(',');
     b = b.join(',');
@@ -115,17 +112,17 @@ var neighbourhoodSorter = function neighbourhoodSorter (a, b) {
 };
 
 /**
- * Define the neighbourhood type (moore or von-neumann) and range, pre-calculate the relative positions of the neighbours
- * @param {string} [neighbourhoodType=null] moore or von-neumann
+ * Define the neighbourhood type (moore, von-neumann, axis, corner, edge or face) and range, pre-calculate the relative positions of the neighbours
+ * @param {string} [neighbourhoodType=null] moore, von-neumann, axis, corner, edge or face
  * @param {int} [neighbourhoodRange=1]
  * @protected
  * @returns {CellularAutomata} CellularAutomata instance for method chaining.
  */
 CellularAutomata.prototype.setNeighbourhood = function (neighbourhoodType, neighbourhoodRange) {
-    this.neighbourhoodType = !!distanceFunctions[neighbourhoodType] ? neighbourhoodType : 'moore';
+    this.neighbourhoodType = !!neighbourhoodFunctions[neighbourhoodType] ? neighbourhoodType : 'moore';
     this.neighbourhoodRange = neighbourhoodRange || 1;
 
-    this.neighbourhood = distanceFunctions[this.neighbourhoodType](this.neighbourhoodRange, this.dimensions);
+    this.neighbourhood = neighbourhoodFunctions[this.neighbourhoodType](this.neighbourhoodRange, this.dimension);
     this.neighbourhood.sort(neighbourhoodSorter);
     this.neighbourhoodNumber = this.neighbourhood.length;
     this.neighbourhoodValues = new Uint8Array(this.neighbourhoodNumber);
@@ -154,7 +151,7 @@ CellularAutomata.prototype.setOutOfBoundValue = function (outOfBoundValue) {
 /**
  * Set the rule for the cellular automata
  * @param {string|function} rule Either a rule string in the S/B, S/B/C or R/T/C/N format or a function accepting the current value as the first argument and the neighbours as the second argument.
- * @param {string} [neighbourhoodType="moore"] Neighbourhood type (moore or von-neumann), only used when the rule is a function.
+ * @param {string} [neighbourhoodType="moore"] Neighbourhood type (moore, von-neumann, axis, corner, edge or face), only used when the rule is a function.
  * @param {int} [neighbourhoodRange=1] Neighbourhood range, only used when the rule is a function.
  * @public
  * @returns {CellularAutomata} CellularAutomata instance for method chaining.
@@ -186,13 +183,14 @@ CellularAutomata.prototype.setRule = function (rule, neighbourhoodType, neighbou
 
 /**
  * Obtain all the neighbours for a given cell, the current neighbourhood type and range
+ * @param {...number} cell - The coordinates of the cell
  * @protected
  * @returns {Array}
  */
-CellularAutomata.prototype.getNeighbours = function () {
+CellularAutomata.prototype.getNeighbours = function (cell) {
     var stride = this.stride,
         neighbourValues = this.neighbourhoodValues,
-        dimensionNumber = this.dimensions,
+        dimensionNumber = this.dimension,
         currentArgumentValue,
         isOutOfBound,
         internalArrayIndex,
@@ -227,7 +225,8 @@ CellularAutomata.prototype.getNeighbours = function () {
 };
 
 /**
- * Switch the current and the working array
+ * Switch the current and the working array in a given cellular automata
+ * @param {CellularAutomata} ca Instance of CellularAutomata
  */
 var switchArrays = function switchArrays (ca) {
     var temp = ca.currentArray;
@@ -243,7 +242,7 @@ var switchArrays = function switchArrays (ca) {
  */
 CellularAutomata.prototype.iterate = function (iterationNumber) {
     var arrayLength = this.currentArray.data.length,
-        dimensionNumber = this.dimensions,
+        dimensionNumber = this.dimension,
         stride = this.stride,
         shape = this.shape,
         neighboursArguments = new Array(dimensionNumber),
@@ -271,7 +270,7 @@ CellularAutomata.prototype.iterate = function (iterationNumber) {
  * Apply a given rule for a given number of iterations, shortcut method for setRule and iterate
  * @param {string|function} rule Either a rule string in a format supported by the rule parser or a function accepting the current value as the first argument and the neighbours as the second argument.
  * @param {int} [iteration=1] Number of iterations
- * @param {string} [neighbourhoodType="moore"] Neighbourhood type (moore or von-neumann), only used when the rule is a function.
+ * @param {string} [neighbourhoodType="moore"] Neighbourhood type (moore, von-neumann, axis, corner, edge or face), only used when the rule is a function.
  * @param {int} [neighbourhoodRange=1] Neighbourhood range, only used when the rule is a function.
  * @public
  * @returns {CellularAutomata} CellularAutomata instance for method chaining.
