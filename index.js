@@ -16,17 +16,17 @@ var CellularAutomata = function (shape, defaultValue) {
 
     defaultValue = defaultValue || 0;
 
-    this.currentArray = utils.createArray(shape, defaultValue);
+    this.array = utils.createArray(shape, defaultValue);
     this.workingArray = utils.createArray(shape, defaultValue);
 
-    this.stride = this.currentArray.stride;
+    this.stride = this.array.stride;
 };
 
 CellularAutomata.prototype.shape = null;
 CellularAutomata.prototype.stride = null;
 CellularAutomata.prototype.dimension = null;
 
-CellularAutomata.prototype.currentArray = null;
+CellularAutomata.prototype.array = null;
 CellularAutomata.prototype.workingArray = null;
 
 CellularAutomata.prototype.rule = null;
@@ -48,7 +48,7 @@ CellularAutomata.prototype.outOfBoundWrapping = false;
  */
 CellularAutomata.prototype.fillWithDistribution = function (distributions, rng) {
     var sum = 0,
-        array = this.currentArray.data,
+        array = this.array.data,
         numberOfDistributions = distributions.length,
         selection,
         i,
@@ -83,7 +83,7 @@ CellularAutomata.prototype.fillWithDistribution = function (distributions, rng) 
  */
 CellularAutomata.prototype.replace = function (replacements) {
     var i = 0,
-        array = this.currentArray.data,
+        array = this.array.data,
         value;
 
     for (; i < array.length; i++) {
@@ -198,7 +198,7 @@ CellularAutomata.prototype.getNeighbours = function (cell) {
 
     for (neighbourIndex = 0; neighbourIndex < this.neighbourhoodNumber; neighbourIndex++) {
         isOutOfBound = false;
-        internalArrayIndex = this.currentArray.offset;
+        internalArrayIndex = 0;
 
         for (dimension = 0; dimension < dimensionNumber; dimension++) {
             currentArgumentValue = arguments[dimension] + this.neighbourhood[neighbourIndex][dimension];
@@ -218,7 +218,7 @@ CellularAutomata.prototype.getNeighbours = function (cell) {
             }
         }
 
-        neighbourValues[neighbourIndex] = isOutOfBound ? this.outOfBoundValue : this.currentArray.data[internalArrayIndex];
+        neighbourValues[neighbourIndex] = isOutOfBound ? this.outOfBoundValue : this.array.data[internalArrayIndex];
     }
 
     return neighbourValues;
@@ -229,8 +229,8 @@ CellularAutomata.prototype.getNeighbours = function (cell) {
  * @param {CellularAutomata} ca Instance of CellularAutomata
  */
 var switchArrays = function switchArrays (ca) {
-    var temp = ca.currentArray;
-    ca.currentArray = ca.workingArray;
+    var temp = ca.array;
+    ca.array = ca.workingArray;
     ca.workingArray = temp;
 };
 
@@ -241,7 +241,7 @@ var switchArrays = function switchArrays (ca) {
  * @returns {CellularAutomata} CellularAutomata instance for method chaining.
  */
 CellularAutomata.prototype.iterate = function (iterationNumber) {
-    var arrayLength = this.currentArray.data.length,
+    var arrayLength = this.array.data.length,
         dimensionNumber = this.dimension,
         stride = this.stride,
         shape = this.shape,
@@ -257,7 +257,7 @@ CellularAutomata.prototype.iterate = function (iterationNumber) {
                 neighboursArguments[currentDimension] = ((index / stride[currentDimension]) | 0) % shape[currentDimension];
             }
 
-            this.workingArray.data[index] = this.rule.process(this.currentArray.data[index], this.getNeighbours.apply(this, neighboursArguments));
+            this.workingArray.data[index] = this.rule.process(this.array.data[index], this.getNeighbours.apply(this, neighboursArguments));
         }
 
         switchArrays(this);

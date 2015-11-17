@@ -10,7 +10,7 @@ describe('Initialization', function () {
 
             ca.dimension.should.equal(1);
             ca.shape.should.deep.equal([4]);
-            ca.currentArray.data.length.should.equal(4);
+            ca.array.data.length.should.equal(4);
         });
 
         it('should support 2d grid', function () {
@@ -18,7 +18,7 @@ describe('Initialization', function () {
 
             ca.dimension.should.equal(2);
             ca.shape.should.deep.equal([4, 3]);
-            ca.currentArray.data.length.should.equal(12);
+            ca.array.data.length.should.equal(12);
         });
 
         it('should support 3d grid', function () {
@@ -26,25 +26,25 @@ describe('Initialization', function () {
 
             ca.dimension.should.equal(3);
             ca.shape.should.deep.equal([4, 3, 2]);
-            ca.currentArray.data.length.should.equal(24);
+            ca.array.data.length.should.equal(24);
         });
 
         it('should by default initialize the grid to 0 values', function () {
             var ca = new CA([2, 2]);
 
-            ca.currentArray.get(0,0).should.equal(0);
-            ca.currentArray.get(0,1).should.equal(0);
-            ca.currentArray.get(1,0).should.equal(0);
-            ca.currentArray.get(1,1).should.equal(0);
+            ca.array.get(0,0).should.equal(0);
+            ca.array.get(0,1).should.equal(0);
+            ca.array.get(1,0).should.equal(0);
+            ca.array.get(1,1).should.equal(0);
         });
 
         it('should allow to specify a default value for the grid', function () {
             var ca = new CA([2, 2], 5);
 
-            ca.currentArray.get(0,0).should.equal(5);
-            ca.currentArray.get(0,1).should.equal(5);
-            ca.currentArray.get(1,0).should.equal(5);
-            ca.currentArray.get(1,1).should.equal(5);
+            ca.array.get(0,0).should.equal(5);
+            ca.array.get(0,1).should.equal(5);
+            ca.array.get(1,0).should.equal(5);
+            ca.array.get(1,1).should.equal(5);
         });
     });
 
@@ -54,7 +54,7 @@ describe('Initialization', function () {
 
             var callToRiggedRng = 0;
 
-            var riggedRng = function() {
+            var riggedRng = function riggedRng () {
                 callToRiggedRng++;
                 return Math.random();
             };
@@ -74,7 +74,7 @@ describe('Initialization', function () {
             var ca = new CA([1,1], 1);
 
             ca.fillWithDistribution([[null,100]]);
-            ca.currentArray.get(0,0).should.equal(1);
+            ca.array.get(0,0).should.equal(1);
         });
     });
 });

@@ -4,7 +4,6 @@ var CA = require('../'),
     should = require('chai').should();
 
 describe('Applying rules', function () {
-
     describe('setRule()', function () {
         it('should accept rule string as argument', function () {
             var ca = new CA([3,3]);
@@ -53,45 +52,45 @@ describe('Applying rules', function () {
         it('should implicitly make on iteration', function () {
             var ca = new CA([3,3]);
 
-            ca.currentArray.set(1,1,1);
+            ca.array.set(1,1,1);
 
             ca.setRule('S/B12V');
             ca.iterate();
 
             // 0 1 0
-            ca.currentArray.get(0,0).should.equal(0);
-            ca.currentArray.get(1,0).should.equal(1);
-            ca.currentArray.get(2,0).should.equal(0);
+            ca.array.get(0,0).should.equal(0);
+            ca.array.get(1,0).should.equal(1);
+            ca.array.get(2,0).should.equal(0);
             // 1 0 1
-            ca.currentArray.get(0,1).should.equal(1);
-            ca.currentArray.get(1,1).should.equal(0);
-            ca.currentArray.get(2,1).should.equal(1);
+            ca.array.get(0,1).should.equal(1);
+            ca.array.get(1,1).should.equal(0);
+            ca.array.get(2,1).should.equal(1);
             // 0 1 0
-            ca.currentArray.get(0,2).should.equal(0);
-            ca.currentArray.get(1,2).should.equal(1);
-            ca.currentArray.get(2,2).should.equal(0);
+            ca.array.get(0,2).should.equal(0);
+            ca.array.get(1,2).should.equal(1);
+            ca.array.get(2,2).should.equal(0);
         });
 
         it('should allow to make multiple iterations', function () {
             var ca = new CA([3,3]);
 
-            ca.currentArray.set(1,1,1);
+            ca.array.set(1,1,1);
 
             ca.setRule('S/B12V');
             ca.iterate(2);
 
             // 1 0 1
-            ca.currentArray.get(0,0).should.equal(1);
-            ca.currentArray.get(1,0).should.equal(0);
-            ca.currentArray.get(2,0).should.equal(1);
+            ca.array.get(0,0).should.equal(1);
+            ca.array.get(1,0).should.equal(0);
+            ca.array.get(2,0).should.equal(1);
             // 0 0 0
-            ca.currentArray.get(0,1).should.equal(0);
-            ca.currentArray.get(1,1).should.equal(0);
-            ca.currentArray.get(2,1).should.equal(0);
+            ca.array.get(0,1).should.equal(0);
+            ca.array.get(1,1).should.equal(0);
+            ca.array.get(2,1).should.equal(0);
             // 1 0 1
-            ca.currentArray.get(0,2).should.equal(1);
-            ca.currentArray.get(1,2).should.equal(0);
-            ca.currentArray.get(2,2).should.equal(1);
+            ca.array.get(0,2).should.equal(1);
+            ca.array.get(1,2).should.equal(0);
+            ca.array.get(2,2).should.equal(1);
         });
 
         it('should return the instance of the CellularAutomata', function () {
@@ -107,49 +106,49 @@ describe('Applying rules', function () {
         it('should implicitly make one iteration', function () {
             var ca = new CA([3,3]);
 
-            ca.currentArray.set(1,1,1);
+            ca.array.set(1,1,1);
 
             ca.apply('S/B12V');
 
             // 0 1 0
-            ca.currentArray.get(0,0).should.equal(0);
-            ca.currentArray.get(1,0).should.equal(1);
-            ca.currentArray.get(2,0).should.equal(0);
+            ca.array.get(0,0).should.equal(0);
+            ca.array.get(1,0).should.equal(1);
+            ca.array.get(2,0).should.equal(0);
             // 1 0 1
-            ca.currentArray.get(0,1).should.equal(1);
-            ca.currentArray.get(1,1).should.equal(0);
-            ca.currentArray.get(2,1).should.equal(1);
+            ca.array.get(0,1).should.equal(1);
+            ca.array.get(1,1).should.equal(0);
+            ca.array.get(2,1).should.equal(1);
             // 0 1 0
-            ca.currentArray.get(0,2).should.equal(0);
-            ca.currentArray.get(1,2).should.equal(1);
-            ca.currentArray.get(2,2).should.equal(0);
+            ca.array.get(0,2).should.equal(0);
+            ca.array.get(1,2).should.equal(1);
+            ca.array.get(2,2).should.equal(0);
         });
 
         it('should allow to make multiple iterations', function () {
             var ca = new CA([3,3]);
 
-            ca.currentArray.set(1,1,1);
+            ca.array.set(1,1,1);
 
             ca.apply('S/B12V',2);
 
             // 1 0 1
-            ca.currentArray.get(0,0).should.equal(1);
-            ca.currentArray.get(1,0).should.equal(0);
-            ca.currentArray.get(2,0).should.equal(1);
+            ca.array.get(0,0).should.equal(1);
+            ca.array.get(1,0).should.equal(0);
+            ca.array.get(2,0).should.equal(1);
             // 0 0 0
-            ca.currentArray.get(0,1).should.equal(0);
-            ca.currentArray.get(1,1).should.equal(0);
-            ca.currentArray.get(2,1).should.equal(0);
+            ca.array.get(0,1).should.equal(0);
+            ca.array.get(1,1).should.equal(0);
+            ca.array.get(2,1).should.equal(0);
             // 1 0 1
-            ca.currentArray.get(0,2).should.equal(1);
-            ca.currentArray.get(1,2).should.equal(0);
-            ca.currentArray.get(2,2).should.equal(1);
+            ca.array.get(0,2).should.equal(1);
+            ca.array.get(1,2).should.equal(0);
+            ca.array.get(2,2).should.equal(1);
         });
 
         it('should allow the use of function with explicit neighbourhood type and ranges', function () {
             var ca = new CA([3,3]);
 
-            ca.currentArray.set(1,1,1);
+            ca.array.set(1,1,1);
 
             var caFunction = function (currentValue, neighbours) {
                 var result = currentValue;
@@ -164,17 +163,17 @@ describe('Applying rules', function () {
             ca.apply(caFunction, 2, 'von-neumann', 1);
 
             // 2 2 2
-            ca.currentArray.get(0,0).should.equal(2);
-            ca.currentArray.get(1,0).should.equal(2);
-            ca.currentArray.get(2,0).should.equal(2);
+            ca.array.get(0,0).should.equal(2);
+            ca.array.get(1,0).should.equal(2);
+            ca.array.get(2,0).should.equal(2);
             // 2 5 2
-            ca.currentArray.get(0,1).should.equal(2);
-            ca.currentArray.get(1,1).should.equal(5);
-            ca.currentArray.get(2,1).should.equal(2);
+            ca.array.get(0,1).should.equal(2);
+            ca.array.get(1,1).should.equal(5);
+            ca.array.get(2,1).should.equal(2);
             // 2 2 2
-            ca.currentArray.get(0,2).should.equal(2);
-            ca.currentArray.get(1,2).should.equal(2);
-            ca.currentArray.get(2,2).should.equal(2);
+            ca.array.get(0,2).should.equal(2);
+            ca.array.get(1,2).should.equal(2);
+            ca.array.get(2,2).should.equal(2);
         });
 
         it('should return the instance of the CellularAutomata', function () {
