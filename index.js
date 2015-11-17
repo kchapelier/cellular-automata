@@ -6,8 +6,8 @@ var parser = require('cellular-automata-rule-parser'),
 
 /**
  * CellularAutomata constructor
- * @param {int[]} shape Dimensions of the grid
- * @param {int} [defaultValue=0] Default values of the cells
+ * @param {int[]} shape Shape of the grid
+ * @param {int} [defaultValue=0] Default value of the cells
  * @constructor
  */
 var CellularAutomata = function (shape, defaultValue) {
@@ -42,14 +42,14 @@ CellularAutomata.prototype.outOfBoundWrapping = false;
 
 /**
  * Fill the grid with a given distribution
- * @param {Array[]} distributions The distribution to fill the grid with (ie: [[0,90], [1,10]] for 90% of 0 and 10% of 1)
+ * @param {Array[]} distribution The distribution to fill the grid with (ie: [[0,90], [1,10]] for 90% of 0 and 10% of 1). Null values are ignored.
  * @param {function} [rng=Math.random] A random number generation function, default to Math.random()
  * @returns {CellularAutomata} CellularAutomata instance for method chaining.
  */
-CellularAutomata.prototype.fillWithDistribution = function (distributions, rng) {
+CellularAutomata.prototype.fillWithDistribution = function (distribution, rng) {
     var sum = 0,
         array = this.array.data,
-        numberOfDistributions = distributions.length,
+        numberOfDistributions = distribution.length,
         selection,
         i,
         k;
@@ -57,43 +57,19 @@ CellularAutomata.prototype.fillWithDistribution = function (distributions, rng) 
     rng = rng || Math.random;
 
     for (i = 0; i < numberOfDistributions; i++) {
-        sum += distributions[i][1];
+        sum += distribution[i][1];
     }
 
     for (k = 0; k < array.length; k++) {
         selection = rng() * sum;
 
         for (i = 0; i < numberOfDistributions; i++) {
-            selection -= distributions[i][1];
-            if (selection <= 0 && distributions[i][0] !== null) {
-                array[k] = distributions[i][0];
+            selection -= distribution[i][1];
+            if (selection <= 0 && distribution[i][0] !== null) {
+                array[k] = distribution[i][0];
                 break;
             }
         }
-    }
-
-    return this;
-};
-
-/**
- * Replace values in the grid
- * @param {Object} replacements Object with search value as key and replacement as value
- * @protected
- * @returns {CellularAutomata} CellularAutomata instance for method chaining.
- */
-CellularAutomata.prototype.replace = function (replacements) {
-    var i = 0,
-        array = this.array.data,
-        value;
-
-    for (; i < array.length; i++) {
-        value = array[i];
-
-        if (value in replacements) {
-            value = replacements[value];
-        }
-
-        array[i] = value;
     }
 
     return this;
@@ -132,7 +108,7 @@ CellularAutomata.prototype.setNeighbourhood = function (neighbourhoodType, neigh
 
 /**
  * Define the value used for the cells out of the array's bounds
- * @param {int|string} outOfBoundValue Any integer value or the string "wrap" to enable out of bound wrapping.
+ * @param {int|string} [outOfBoundValue=0] Any integer value or the string "wrap" to enable out of bound wrapping.
  * @public
  * @returns {CellularAutomata} CellularAutomata instance for method chaining.
  */
@@ -149,7 +125,7 @@ CellularAutomata.prototype.setOutOfBoundValue = function (outOfBoundValue) {
 };
 
 /**
- * Set the rule for the cellular automata
+ * Define the rule of the cellular automata and the neighbourhood to be used.
  * @param {string|function} rule Either a rule string in the S/B, S/B/C or R/T/C/N format or a function accepting the current value as the first argument and the neighbours as the second argument.
  * @param {string} [neighbourhoodType="moore"] Neighbourhood type (moore, von-neumann, axis, corner, edge or face), only used when the rule is a function.
  * @param {int} [neighbourhoodRange=1] Neighbourhood range, only used when the rule is a function.
@@ -235,7 +211,7 @@ var switchArrays = function switchArrays (ca) {
 };
 
 /**
- * Make multiple iterations
+ * Apply the previously defined CA rule multiple times.
  * @param {int} [iterationNumber=1] Number of iterations
  * @public
  * @returns {CellularAutomata} CellularAutomata instance for method chaining.
