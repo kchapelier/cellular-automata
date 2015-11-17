@@ -72,7 +72,7 @@ console.log(cellularAutomata.array); // ndarray containing the result
 
 ### Constructor
 
-### new CellularAutomata(shape[, defaultValue = 0])
+**new CellularAutomata(shape[, defaultValue = 0])**
 
 - *shape :* Shape of the grid (ie: [800,600] for a 2d grid of 800 cells of width and 600 cells of height).
 - *defaultValue :* Default value of the cells.
@@ -81,20 +81,20 @@ console.log(cellularAutomata.array); // ndarray containing the result
 
 All methods are chainable
 
-#### setOutOfBoundValue([outOfBoundValue = 0])
+**setOutOfBoundValue([outOfBoundValue = 0])**
 
 Define the value used for the neighbours out of the array's bounds.
 
 - *outOfBoundValue :* The value to use, either an integer or the string "wrap" to enable grid wrapping.
 
-#### fillWithDistribution(distribution[, rng = Math.random])
+**fillWithDistribution(distribution[, rng = Math.random])**
 
 Fill the grid with a given distribution.
 
 - *distribution :* An array of two dimensions representing the distribution to fill the grid with. (ie: [[0,90], [1,10]] for 90% of 0 and 10% of 1). Null values are ignored.
 - *rng :* A function used as random number generator, defaults to Math.random.
 
-#### setRule(rule[, neighbourhoodType[, neighbourhoodRange = 1]])
+**setRule(rule[, neighbourhoodType[, neighbourhoodRange = 1]])**
 
 Define the rule of the cellular automata and the neighbourhood to be used.
 
@@ -102,13 +102,13 @@ Define the rule of the cellular automata and the neighbourhood to be used.
 - *neighbourhoodType :* Neighbourhood type (moore, von-neumann, axis, corner, edge or face), only used when the rule is a function.
 - *neighbourhoodRange :* Neighbourhood range, only used when the rule is a function.
 
-#### iterate([iterations = 1])
+**iterate([iterations = 1])**
 
 Apply the previously defined CA rule multiple times.
 
 - *iteration :* Number of iterations.
 
-#### apply(rule[, iterations = 1[, neighbourhoodType[, neighbourhoodRange = 1]]])
+**apply(rule[, iterations = 1[, neighbourhoodType[, neighbourhoodRange = 1]]])**
 
 Apply a given rule for a given number of iterations, shortcut method for setRule and iterate.
 
@@ -119,15 +119,15 @@ Apply a given rule for a given number of iterations, shortcut method for setRule
 
 ### Properties
 
-#### shape
+**shape**
 
 The shape of the grid.
 
-#### dimension
+**dimension**
 
 The dimension of the grid.
 
-#### array
+**array**
 
 The ndarray containing all the current data in the grid.
 
@@ -154,7 +154,6 @@ The ndarray containing all the current data in the grid.
 ## Roadmap
 
 - More tests.
-- More docs.
 
 ## License
 
