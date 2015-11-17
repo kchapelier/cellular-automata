@@ -133,6 +133,14 @@ The ndarray containing all the current data in the grid.
 
 ## Changelog
 
+1.0.0 (2015-11-17) :
+
+- Better documentation.
+- The method fillWithDistribution now ignores null values.
+- Rename the properties currentArray to array and dimensions to dimension.
+- Remove the property defaultValue, the method switchArray and the method replace.
+- Declare stable.
+
 0.1.0 (2015-11-02) :
 
 - Update the rule parser.
