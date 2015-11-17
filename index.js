@@ -228,12 +228,11 @@ CellularAutomata.prototype.getNeighbours = function () {
 
 /**
  * Switch the current and the working array
- * @protected
  */
-CellularAutomata.prototype.switchArrays = function () {
-    var temp = this.currentArray;
-    this.currentArray = this.workingArray;
-    this.workingArray = temp;
+var switchArrays = function switchArrays (ca) {
+    var temp = ca.currentArray;
+    ca.currentArray = ca.workingArray;
+    ca.workingArray = temp;
 };
 
 /**
@@ -262,7 +261,7 @@ CellularAutomata.prototype.iterate = function (iterationNumber) {
             this.workingArray.data[index] = this.rule.process(this.currentArray.data[index], this.getNeighbours.apply(this, neighboursArguments));
         }
 
-        this.switchArrays();
+        switchArrays(this);
     }
 
     return this;
