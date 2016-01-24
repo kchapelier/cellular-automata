@@ -133,6 +133,10 @@ The ndarray containing all the current data in the grid.
 
 ## Changelog
 
+1.0.1 (2016-01-24) :
+
+- Update the rule parser.
+
 1.0.0 (2015-11-17) :
 
 - Better documentation.

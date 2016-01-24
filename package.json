@@ -1,6 +1,6 @@
 {
   "name": "cellular-automata",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Cellular automata runner",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "moore": "0.0.2",
     "von-neumann": "^1.0.0",
     "ndarray": "^1.0.18",
-    "cellular-automata-rule-parser": "^1.1.0",
+    "cellular-automata-rule-parser": "^2.0.0",
     "unconventional-neighbours": "^1.0.0"
   },
   "devDependencies": {
