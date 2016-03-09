@@ -85,7 +85,7 @@ All methods are chainable
 
 Define the value used for the neighbours out of the array's bounds.
 
-- *outOfBoundValue :* The value to use, either an integer or the string "wrap" to enable grid wrapping.
+- *outOfBoundValue :* The value to use, either an integer, the string "wrap" to enable grid wrapping or the string "clamp" to use the nearest in-bound cell.
 
 **fillWithDistribution(distribution[, rng = Math.random])**
 
@@ -132,6 +132,10 @@ The dimension of the grid.
 The ndarray containing all the current data in the grid.
 
 ## Changelog
+
+1.1.0 (2016-03-09) :
+
+- Support for 'clamp' out-of-bound value.
 
 1.0.1 (2016-01-24) :
 

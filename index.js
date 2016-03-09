@@ -39,6 +39,7 @@ CellularAutomata.prototype.neighbourhoodValues = null;
 
 CellularAutomata.prototype.outOfBoundValue = null;
 CellularAutomata.prototype.outOfBoundWrapping = false;
+CellularAutomata.prototype.outOfBoundClamping = false;
 
 /**
  * Fill the grid with a given distribution
@@ -108,15 +109,21 @@ CellularAutomata.prototype.setNeighbourhood = function (neighbourhoodType, neigh
 
 /**
  * Define the value used for the cells out of the array's bounds
- * @param {int|string} [outOfBoundValue=0] Any integer value or the string "wrap" to enable out of bound wrapping.
+ * @param {int|string} [outOfBoundValue=0] Any integer value, the string "wrap" to enable out of bound wrapping or the string "clamp" to enable bound clamping.
  * @public
  * @returns {CellularAutomata} CellularAutomata instance for method chaining.
  */
 CellularAutomata.prototype.setOutOfBoundValue = function (outOfBoundValue) {
-    if (outOfBoundValue === 'wrap') {
+    if (outOfBoundValue === 'clamp') {
+        this.outOfBoundClamping = true;
+        this.outOfBoundWrapping = false;
+        this.outOfBoundValue = 0;
+    } else if (outOfBoundValue === 'wrap') {
+        this.outOfBoundClamping = false;
         this.outOfBoundWrapping = true;
         this.outOfBoundValue = 0;
     } else {
+        this.outOfBoundClamping = false;
         this.outOfBoundWrapping = false;
         this.outOfBoundValue = outOfBoundValue | 0;
     }
@@ -176,22 +183,23 @@ CellularAutomata.prototype.getNeighbours = function (cell) {
         isOutOfBound = false;
         internalArrayIndex = 0;
 
-        for (dimension = 0; dimension < dimensionNumber; dimension++) {
+        for (dimension = 0; dimension < dimensionNumber && !isOutOfBound; dimension++) {
             currentArgumentValue = arguments[dimension] + this.neighbourhood[neighbourIndex][dimension];
 
             if (currentArgumentValue < 0 || currentArgumentValue >= this.shape[dimension]) {
-                if (this.outOfBoundWrapping) {
+                if (this.outOfBoundClamping) {
+                    // clamp to the bound
+                    currentArgumentValue = Math.max(0, Math.min(currentArgumentValue, this.shape[dimension] - 1));
+                } else if (this.outOfBoundWrapping) {
                     // euclidean modulo
                     currentArgumentValue = currentArgumentValue % this.shape[dimension];
                     currentArgumentValue = currentArgumentValue < 0 ? currentArgumentValue + Math.abs(this.shape[dimension]) : currentArgumentValue;
-
-                    internalArrayIndex += currentArgumentValue * stride[dimension];
                 } else {
                     isOutOfBound = true;
                 }
-            } else {
-                internalArrayIndex += currentArgumentValue * stride[dimension];
             }
+
+            internalArrayIndex += currentArgumentValue * stride[dimension];
         }
 
         neighbourValues[neighbourIndex] = isOutOfBound ? this.outOfBoundValue : this.array.data[internalArrayIndex];
