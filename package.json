@@ -26,7 +26,7 @@
     "moore": "0.0.2",
     "von-neumann": "^1.0.0",
     "ndarray": "^1.0.18",
-    "cellular-automata-rule-parser": "^2.0.0",
+    "cellular-automata-rule-parser": "^2.1.0",
     "unconventional-neighbours": "^1.0.0"
   },
   "devDependencies": {

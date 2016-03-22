@@ -62,7 +62,7 @@ describe('Initialization', function () {
             ca.setRng(riggedRng);
             ca.fillWithDistribution([[0,50], [1,50]]);
 
-            callToRiggedRng.should.equal(9)
+            callToRiggedRng.should.equal(9);
         });
 
         it('should accept an optional rng function', function () {

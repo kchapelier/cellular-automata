@@ -182,4 +182,35 @@ describe('Applying rules', function () {
             ca.apply('S/B12V',2).should.equal(ca);
         });
     });
+
+    describe('support stochastic rules', function () {
+        it('should use the internal rng when using stochastic rules', function () {
+            var ca = new CA([3,3]);
+
+            var callToRiggedRng = 0;
+
+            var riggedRng = function riggedRng () {
+                callToRiggedRng++;
+                return Math.random();
+            };
+
+            ca.setRng(riggedRng);
+            ca.apply('E / 0..8:0.3', 1);
+
+            callToRiggedRng.should.equal(9);
+        });
+
+        it('should correctly take into account the result of the rng function', function () {
+            var ca = new CA([1,1]);
+            ca.setRng(function () { return 1; });
+            ca.apply('E / 0..8:0.3', 1);
+
+            ca.array.get(0,0).should.equal(0);
+
+            ca.setRng(function () { return 0; });
+            ca.apply('E / 0..8:0.3', 1);
+
+            ca.array.get(0,0).should.equal(1);
+        });
+    });
 });
