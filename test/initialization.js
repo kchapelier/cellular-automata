@@ -49,6 +49,22 @@ describe('Initialization', function () {
     });
 
     describe('fillWithDistribution', function () {
+        it('should by default use the internal rng function set with setRng()', function () {
+            var ca = new CA([3,3]);
+
+            var callToRiggedRng = 0;
+
+            var riggedRng = function riggedRng () {
+                callToRiggedRng++;
+                return Math.random();
+            };
+
+            ca.setRng(riggedRng);
+            ca.fillWithDistribution([[0,50], [1,50]]);
+
+            callToRiggedRng.should.equal(9)
+        });
+
         it('should accept an optional rng function', function () {
             var ca = new CA([3,3]);
 
