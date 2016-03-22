@@ -87,12 +87,18 @@ Define the value used for the neighbours out of the array's bounds.
 
 - *outOfBoundValue :* The value to use, either an integer, the string "wrap" to enable grid wrapping or the string "clamp" to use the nearest in-bound cell.
 
-**fillWithDistribution(distribution[, rng = Math.random])**
+**setRng([rng = null])**
+
+Set the random number generation function used internally.
+
+- *rng :* A function to use as random number generator, defaults to Math.random.
+
+**fillWithDistribution(distribution[, rng = null])**
 
 Fill the grid with a given distribution.
 
 - *distribution :* An array of two dimensions representing the distribution to fill the grid with. (ie: [[0,90], [1,10]] for 90% of 0 and 10% of 1). Null values are ignored.
-- *rng :* A function used as random number generator, defaults to Math.random.
+- *rng :* A function used as random number generator, defaults to the internal RNG function.
 
 **setRule(rule[, neighbourhoodType[, neighbourhoodRange = 1]])**
 
@@ -132,6 +138,11 @@ The dimension of the grid.
 The ndarray containing all the current data in the grid.
 
 ## Changelog
+
+1.2.0 (2016-03-22) :
+
+- Update the rule parser to support the extended stochastic rule format.
+- Add the method setRng() to set the internal RNG function.
 
 1.1.0 (2016-03-09) :
 
