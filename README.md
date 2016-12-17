@@ -19,7 +19,7 @@ npm test
 - Doesn't have any dependency to the DOM.
 - Can easily apply different successive rules.
 - Can be used in any dimension (1D, 2D, 3D and more).
-- Allow the cellular automata rules to be passed as a string in one of several common CA rule format, see [cellular-automata-rule-parser]().
+- Allow the cellular automata rules to be passed as a string in one of several common CA rule format, see [cellular-automata-rule-parser](https://www.npmjs.com/package/cellular-automata-rule-parser).
 
 ## Usage
 
