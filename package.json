@@ -1,11 +1,15 @@
 {
   "name": "cellular-automata",
   "version": "1.2.0",
-  "description": "Cellular automata runner",
+  "description": "Cellular automata runner, in arbirtrary dimensions.",
   "main": "index.js",
   "scripts": {
     "test": "mocha test/"
   },
+  "files": [
+    "index.js",
+    "lib/"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/kchapelier/cellular-automata.git"
@@ -13,7 +17,10 @@
   "keywords": [
     "automata",
     "cellular",
-    "parser"
+    "game of life",
+    "conway",
+    "wolfram",
+    "3d"
   ],
   "author": "Kevin Chapelier",
   "license": "MIT",
@@ -23,14 +30,14 @@
   },
   "homepage": "https://github.com/kchapelier/cellular-automata",
   "dependencies": {
-    "moore": "0.0.2",
-    "von-neumann": "^1.0.0",
+    "moore": "1.0.0",
+    "von-neumann": "^1.0.1",
     "ndarray": "^1.0.18",
-    "cellular-automata-rule-parser": "^2.1.1",
+    "cellular-automata-rule-parser": "^3.0.0",
     "unconventional-neighbours": "^1.0.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "mocha": "^3.2.0"
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4"
   }
 }
