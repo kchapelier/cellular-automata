@@ -1,5 +1,7 @@
 # cellular-automata
 
+[![Build Status](https://travis-ci.org/kchapelier/cellular-automata.svg)](https://travis-ci.org/kchapelier/cellular-automata) [![NPM version](https://badge.fury.io/js/cellular-automata.svg)](http://badge.fury.io/js/cellular-automata)
+
 ## Installing and testing
 
 With [npm](http://npmjs.org) do:
@@ -139,20 +141,28 @@ The ndarray containing all the current data in the grid.
 
 ## Changelog
 
-1.2.0 (2016-03-22) :
+### 2.0.0 (2019-04-19) :
+
+- Minor refactoring.
+- Reduce npm package size.
+- Update dependencies.
+- Add travis support.
+- Less direct support for older browser (now use `const` and `let` variable declarations).
+
+### 1.2.0 (2016-03-22) :
 
 - Update the rule parser to support the extended stochastic rule format.
 - Add the method setRng() to set the internal RNG function.
 
-1.1.0 (2016-03-09) :
+### 1.1.0 (2016-03-09) :
 
 - Support for 'clamp' out-of-bound value.
 
-1.0.1 (2016-01-24) :
+### 1.0.1 (2016-01-24) :
 
 - Update the rule parser.
 
-1.0.0 (2015-11-17) :
+### 1.0.0 (2015-11-17) :
 
 - Better documentation.
 - The method fillWithDistribution now ignores null values.
@@ -160,21 +170,21 @@ The ndarray containing all the current data in the grid.
 - Remove the property defaultValue, the method switchArray and the method replace.
 - Declare stable.
 
-0.1.0 (2015-11-02) :
+### 0.1.0 (2015-11-02) :
 
 - Update the rule parser.
 - Supports unconventional neighbourhood types (axis, corner, edge and face).
 - Sort neighbourhood to allow position dependent rules.
 
-0.0.3 (2015-10-17) :
+### 0.0.3 (2015-10-17) :
 
 - Update the rule parser.
 
-0.0.2 (2015-10-13) :
+### 0.0.2 (2015-10-13) :
 
 - Update the rule parser.
 
-0.0.1 (2015-10-04) :
+### 0.0.1 (2015-10-04) :
 
 - First implementation.
 
@@ -188,7 +198,7 @@ MIT
 
 ## Learn more about cellular automata
 
-- [Mirek Wójtowicz's Cellular Automata rules lexicon for MCell](http://www.mirekw.com/ca/ca_rules.html)
+- [Mirek Wï¿½jtowicz's Cellular Automata rules lexicon for MCell](http://www.mirekw.com/ca/ca_rules.html)
 - [Cellular Automata Theory in Cellab's manual](https://www.fourmilab.ch/cellab/manual/chap4.html)
 - [Wolfram's Elementary Cellular Automaton](http://mathworld.wolfram.com/ElementaryCellularAutomaton.html)
 - [Golly](http://golly.sourceforge.net/)

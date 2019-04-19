@@ -1,6 +1,6 @@
 {
   "name": "cellular-automata",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Cellular automata runner, in arbirtrary dimensions.",
   "main": "index.js",
   "scripts": {
