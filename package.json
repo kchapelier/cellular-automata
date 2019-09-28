@@ -33,11 +33,11 @@
     "moore": "1.0.0",
     "von-neumann": "^1.0.1",
     "ndarray": "^1.0.18",
-    "cellular-automata-rule-parser": "^3.0.0",
+    "cellular-automata-rule-parser": "^3.0.1",
     "unconventional-neighbours": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.1.4"
+    "mocha": "^6.2.0"
   }
 }

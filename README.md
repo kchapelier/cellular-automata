@@ -141,6 +141,10 @@ The ndarray containing all the current data in the grid.
 
 ## Changelog
 
+### 2.0.1 (2019-09-28) :
+
+- Update dependencies.
+
 ### 2.0.0 (2019-04-19) :
 
 - Minor refactoring.
